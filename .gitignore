@@ -1,0 +1,5 @@
+/target
+/.idea
+*.iml
+input.txt
+example.txt
