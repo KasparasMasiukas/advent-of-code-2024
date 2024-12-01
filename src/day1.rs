@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 #[aoc(day1, part1)]
-fn part1(input: &str) -> u64 {
+pub fn part1(input: &str) -> u64 {
     let (mut list1, mut list2) = get_lists(input);
     list1.sort_unstable();
     list2.sort_unstable();
@@ -13,7 +13,7 @@ fn part1(input: &str) -> u64 {
 }
 
 #[aoc(day1, part2)]
-fn part2(input: &str) -> u64 {
+pub fn part2(input: &str) -> u64 {
     let (list1, list2) = get_lists(input);
     let occurrences = list2.iter().fold(HashMap::new(), |mut acc, &num| {
         *acc.entry(num).or_insert(0) += 1;
