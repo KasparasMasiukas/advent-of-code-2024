@@ -1,35 +1,28 @@
-use crate::utils::read_input;
 use std::collections::HashMap;
 
-pub fn run() {
-    let input = read_input(file!(), false);
-    solve_part1(&input);
-    solve_part2(&input);
-}
-
-fn solve_part1(input: &str) {
-    let (mut list1, mut list2) = get_lists(&input);
-    list1.sort();
-    list2.sort();
-    let total: u64 = list1
+#[aoc(day1, part1)]
+fn part1(input: &str) -> u64 {
+    let (mut list1, mut list2) = get_lists(input);
+    list1.sort_unstable();
+    list2.sort_unstable();
+    list1
         .iter()
         .zip(list2.iter())
         .map(|(a, b)| a.abs_diff(*b))
-        .sum();
-    println!("Part 1 total: {}", total);
+        .sum()
 }
 
-fn solve_part2(input: &str) {
-    let (list1, list2) = get_lists(&input);
+#[aoc(day1, part2)]
+fn part2(input: &str) -> u64 {
+    let (list1, list2) = get_lists(input);
     let occurrences = list2.iter().fold(HashMap::new(), |mut acc, &num| {
         *acc.entry(num).or_insert(0) += 1;
         acc
     });
-    let total: u64 = list1
+    list1
         .iter()
         .map(|num| num * occurrences.get(num).unwrap_or(&0))
-        .sum();
-    println!("Part 2 total: {}", total);
+        .sum()
 }
 
 fn get_lists(input: &str) -> (Vec<u64>, Vec<u64>) {
@@ -43,4 +36,26 @@ fn get_lists(input: &str) -> (Vec<u64>, Vec<u64>) {
             )
         })
         .unzip()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const TEST_INPUT: &str = "3   4
+4   3
+2   5
+1   3
+3   9
+3   3";
+
+    #[test]
+    fn part1_example() {
+        assert_eq!(part1(TEST_INPUT), 11);
+    }
+
+    #[test]
+    fn part2_example() {
+        assert_eq!(part2(TEST_INPUT), 31);
+    }
 }
