@@ -13,6 +13,9 @@ rand = "0.8.5"
 name = "today"
 harness = false
 
+[build-dependencies]
+reqwest = { version = "0.12.9", features = ["blocking"] }
+
 [dev-dependencies]
 criterion = { version = "2.7.2", package = "codspeed-criterion-compat" }
 reqwest = { version = "0.12.9", features = ["blocking"] }
