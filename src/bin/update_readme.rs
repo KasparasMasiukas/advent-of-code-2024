@@ -31,7 +31,7 @@ fn main() {
                 let mut parts = times.split_whitespace();
                 let mut low =
                     parts.next().unwrap_or("").to_string() + " " + parts.next().unwrap_or("");
-                let mut mean =
+                let mean =
                     parts.next().unwrap_or("").to_string() + " " + parts.next().unwrap_or("");
                 let mut high =
                     parts.next().unwrap_or("").to_string() + " " + parts.next().unwrap_or("");
