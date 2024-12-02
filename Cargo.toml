@@ -8,3 +8,11 @@ edition = "2021"
 aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"
 rand = "0.8.5"
+
+[[bench]]
+name = "today"
+harness = false
+
+[dev-dependencies]
+criterion = { version = "2.7.2", package = "codspeed-criterion-compat" }
+reqwest = { version = "0.12.9", features = ["blocking"] }
