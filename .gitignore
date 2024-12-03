@@ -4,3 +4,4 @@
 *.iml
 input.txt
 example.txt
+.env
