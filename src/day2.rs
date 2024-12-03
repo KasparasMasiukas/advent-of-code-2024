@@ -339,6 +339,10 @@ mod tests {
                 );
             }
         }
+        // Now compare full results
+        let expected_output = part1_naive(&input);
+        println!("Part 1 naive output: {}", expected_output);
+        assert_eq!(part1(&input), expected_output);
     }
 
     #[test]
@@ -364,5 +368,9 @@ mod tests {
                 );
             }
         }
+        // Now compare full results
+        let expected_output = part2_naive(&input);
+        println!("Part 2 naive output: {}", expected_output);
+        assert_eq!(part2(&input), expected_output);
     }
 }
