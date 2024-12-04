@@ -24,6 +24,7 @@ dependencies = [
  "aoc-runner",
  "aoc-runner-derive",
  "codspeed-criterion-compat",
+ "memchr",
  "paste",
  "rand",
  "reqwest",
