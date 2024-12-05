@@ -233,13 +233,13 @@ MXMXAXMASX";
             format!("day{DAY}-alt1.txt"),
             format!("day{DAY}-alt2.txt"),
         ];
-        for path in paths.iter() {
+        let outputs: [usize; 3] = [2454, 2500, 2583];
+        for (i, path) in paths.iter().enumerate() {
             let module_dir = Path::new(file!()).parent().unwrap();
             let file_path = module_dir.join(format!("../input/2024/{}", path));
             println!("Reading input file: {}", file_path.display());
             let input = fs::read_to_string(file_path).expect("Failed to read the input file");
-            let expected_output = part1_naive(&input);
-            println!("Part 1 naive output: {}", expected_output);
+            let expected_output = outputs[i];
             assert_eq!(part1(&input), expected_output);
         }
     }
@@ -251,13 +251,13 @@ MXMXAXMASX";
             format!("day{DAY}-alt1.txt"),
             format!("day{DAY}-alt2.txt"),
         ];
-        for path in paths.iter() {
+        let outputs: [usize; 3] = [1858, 1933, 1978];
+        for (i, path) in paths.iter().enumerate() {
             let module_dir = Path::new(file!()).parent().unwrap();
             let file_path = module_dir.join(format!("../input/2024/{}", path));
             println!("Reading input file: {}", file_path.display());
             let input = fs::read_to_string(file_path).expect("Failed to read the input file");
-            let expected_output = part2_naive(&input);
-            println!("Part 2 naive output: {}", expected_output);
+            let expected_output = outputs[i];
             assert_eq!(part2(&input), expected_output);
         }
     }
