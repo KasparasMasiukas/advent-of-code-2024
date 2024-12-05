@@ -1,6 +1,7 @@
 ## Introduction
 
 This repo contains Rust solutions for Advent of Code 2024, optimised for speed.
+
 Competing in the [Advent of CodSpeed](https://codspeed.io/advent/) challenge.
 
 [![CodSpeed Badge](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/KasparasMasiukas/advent-of-code-2024)
