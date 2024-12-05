@@ -1,0 +1,6 @@
+echo "### System Information:"
+echo "* CPU Model: $(lscpu | grep 'Model name' | awk -F ':' '{print $2}' | sed 's/^ *//')"
+echo "* Architecture: $(uname -m)"
+echo "* Number of CPUs: $(nproc)"
+echo "* Total RAM: $(free -h | awk '/^Mem:/{print $2}')"
+echo "* L3 Cache: $(lscpu | grep 'L3 cache' | awk -F ':' '{print $2}' | sed 's/^ *//')"
