@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AOC_SESSION: ${{ secrets.AOC_SESSION }}
+      RUSTFLAGS: "-C target-cpu=native"
     steps:
       - uses: actions/checkout@v4
 
