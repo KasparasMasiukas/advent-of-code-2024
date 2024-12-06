@@ -44,31 +44,13 @@ mod tests {
             format!("day{DAY}-alt1.txt"),
             format!("day{DAY}-alt2.txt"),
         ];
-        for path in paths.iter() {
+        let outputs: [u32; 3] = [0, 0, 0];
+        for (i, path) in paths.iter().enumerate() {
             let module_dir = Path::new(file!()).parent().unwrap();
             let file_path = module_dir.join(format!("../input/2024/{}", path));
             println!("Reading input file: {}", file_path.display());
             let input = fs::read_to_string(file_path).expect("Failed to read the input file");
-
-            for (index, line) in input.lines().enumerate() {
-                let naive_result = part1_naive(line);
-                let optimized_result = part1(line);
-                if naive_result != optimized_result {
-                    println!("Discrepancy found at line {}: {}", index + 1, line);
-                    println!(
-                        "Naive result: {}, Optimized result: {}",
-                        naive_result, optimized_result
-                    );
-                    assert_eq!(
-                        naive_result, optimized_result,
-                        "Results differ for input: {}",
-                        line
-                    );
-                }
-            }
-            // Now compare full results
-            let expected_output = part1_naive(&input);
-            println!("Part 1 naive output: {}", expected_output);
+            let expected_output = outputs[i];
             assert_eq!(part1(&input), expected_output);
         }
     }
@@ -80,31 +62,13 @@ mod tests {
             format!("day{DAY}-alt1.txt"),
             format!("day{DAY}-alt2.txt"),
         ];
-        for path in paths.iter() {
+        let outputs: [u32; 3] = [0, 0, 0];
+        for (i, path) in paths.iter().enumerate() {
             let module_dir = Path::new(file!()).parent().unwrap();
             let file_path = module_dir.join(format!("../input/2024/{}", path));
             println!("Reading input file: {}", file_path.display());
             let input = fs::read_to_string(file_path).expect("Failed to read the input file");
-
-            for (index, line) in input.lines().enumerate() {
-                let naive_result = part2_naive(line);
-                let optimized_result = part2(line);
-                if naive_result != optimized_result {
-                    println!("Discrepancy found at line {}: {}", index + 1, line);
-                    println!(
-                        "Naive result: {}, Optimized result: {}",
-                        naive_result, optimized_result
-                    );
-                    assert_eq!(
-                        naive_result, optimized_result,
-                        "Results differ for input: {}",
-                        line
-                    );
-                }
-            }
-            // Now compare full results
-            let expected_output = part2_naive(&input);
-            println!("Part 2 naive output: {}", expected_output);
+            let expected_output = outputs[i];
             assert_eq!(part2(&input), expected_output);
         }
     }
