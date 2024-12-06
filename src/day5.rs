@@ -1,5 +1,4 @@
 use memchr::memchr_iter;
-use std::arch::x86_64::*;
 
 #[aoc(day5, part1, naive)]
 pub fn part1_naive(input: &str) -> u32 {
@@ -102,17 +101,9 @@ unsafe fn get_mid_ordered(mut line: &[u8]) -> (usize, &[u8]) {
     // SIMD was slightly faster for u128 bitmaps
     // Below performs counting of 1-bits to determine which number has exactly half of the elements
     // ordered above it. This is only possible because the input has full ordering.
-    let seen_reg = _mm_loadu_si128(&seen as *const u128 as *const __m128i);
-    for i in 0..count {
-        let num = nums[i];
-        let xmask = _mm_loadu_si128(&GREATER_CNT[num] as *const u128 as *const __m128i);
-        let combined = _mm_and_si128(xmask, seen_reg);
-        let low = _mm_cvtsi128_si64(combined) as u64;
-        let high = _mm_extract_epi64::<1>(combined) as u64;
-        let c = _popcnt64(low as i64) + _popcnt64(high as i64);
-
-        if c as usize == mid {
-            return (num, line);
+    for num in &nums {
+        if (GREATER_CNT[*num] & seen).count_ones() as usize == mid {
+            return (*num, line);
         }
     }
 
