@@ -117,6 +117,16 @@ fn part1_impl(input: &str) -> (usize, Vec<(usize, usize)>, usize, usize) {
 // ^ for the above to work, we'd also need vertical bitmask (too bad 130 bit doesn't fit in u128) - AHA! there's no way to enter the 1st or 130th row/column without exiting the grid
 // because hitting the wall redirects the guard. we only need booleans if we have walls on left, right, up, down
 
+// Part 2 optimization ideas:
+// TODO: pre-process each cell to find the closest obstacle in each direction for movement (no offset)
+// ^ Set up a 3D array graph (130x130x4) to store the closest obstacle in each direction for each cell
+// ^ After placing an obstacle, anytime we'd want to get next obstacle for movement, we have to check if column or row matches, we might get intercepted by the new obstacle instead
+// TODO: instead of cloning the grid, have one static with generation counter += 4 (because we have 4 directions)//
+// TODO: run the initial loop to identify viable cells that can impact the guard's movement (only <25% of all cells would be valid)
+// Idea: grid could be represented as a 2D bitmask (130 bit x 130 bit). In that case, from each position we can shift left/right to find the next obstacle in each direction
+// ^ for the above to work, we'd also need vertical bitmask (too bad 130 bit doesn't fit in u128) - AHA! there's no way to enter the 1st or 130th row/column without exiting the grid
+// because hitting the wall redirects the guard. we only need booleans if we have walls on left, right, up, down
+
 /// Counts the number of empty spots where placing an obstacle would cause the guard to get stuck.
 ///
 /// # Arguments
