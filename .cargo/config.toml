@@ -1,2 +1,5 @@
 [test]
 test-threads = 1
+
+[build]
+rustflags = ["-C", "target-cpu=native"]
