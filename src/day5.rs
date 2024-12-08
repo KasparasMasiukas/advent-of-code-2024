@@ -49,7 +49,6 @@ pub fn part2(input: &str) -> usize {
     unsafe { impl2(input) }
 }
 
-#[target_feature(enable = "avx2,bmi1,bmi2,cmpxchg16b,lzcnt,movbe,popcnt")]
 unsafe fn impl2(input: &str) -> usize {
     TRUE = TRUE.wrapping_add(1);
     let mut bytes = parse_orderings_with_cnt(input.as_bytes());
@@ -64,7 +63,6 @@ unsafe fn impl2(input: &str) -> usize {
     sum
 }
 
-#[target_feature(enable = "avx2,bmi1,bmi2,cmpxchg16b,lzcnt,movbe,popcnt")]
 unsafe fn get_mid_ordered(mut line: &[u8]) -> (usize, &[u8]) {
     let mut nums: [usize; 24] = [0; 24];
     let mut count = 0;
