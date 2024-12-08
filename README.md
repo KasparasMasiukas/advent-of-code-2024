@@ -11,18 +11,20 @@ Competing in the [Advent of CodSpeed](https://codspeed.io/advent/) challenge.
 <!-- BENCHMARK RESULTS START -->
 | Challenge       | Low         | Mean        | High        |
 |-----------------|-------------|-------------|-------------|
-| day1_part1      | 8.0797 µs   | 8.0876 µs   | 8.0951 µs   |
-| day1_part2      | 3.3199 µs   | 3.3231 µs   | 3.3262 µs   |
-| day2_part1      | 17.541 µs   | 17.553 µs   | 17.564 µs   |
-| day2_part2      | 31.698 µs   | 31.729 µs   | 31.763 µs   |
-| day3_part1      | 7.2853 µs   | 7.2997 µs   | 7.3147 µs   |
-| day3_part2      | 2.7706 µs   | 2.7744 µs   | 2.7789 µs   |
-| day4_part1      | 39.582 µs   | 39.700 µs   | 39.810 µs   |
-| day4_part2      | 23.930 µs   | 23.986 µs   | 24.040 µs   |
-| day5_part1      | 4.3842 µs   | 4.3948 µs   | 4.4053 µs   |
-| day5_part2      | 9.4366 µs   | 9.4596 µs   | 9.4820 µs   |
-| day6_part1      | 268.03 µs   | 268.34 µs   | 268.63 µs   |
-| day6_part2      | 6.9168 ms   | 6.9236 ms   | 6.9313 ms   |
+| day1_part1      | 8.1360 µs   | 8.1496 µs   | 8.1651 µs   |
+| day1_part2      | 3.5023 µs   | 3.5096 µs   | 3.5167 µs   |
+| day2_part1      | 18.038 µs   | 18.057 µs   | 18.080 µs   |
+| day2_part2      | 32.172 µs   | 32.573 µs   | 33.001 µs   |
+| day3_part1      | 6.9174 µs   | 6.9309 µs   | 6.9454 µs   |
+| day3_part2      | 3.0024 µs   | 3.0520 µs   | 3.1078 µs   |
+| day4_part1      | 39.775 µs   | 39.850 µs   | 39.951 µs   |
+| day4_part2      | 24.042 µs   | 24.075 µs   | 24.107 µs   |
+| day5_part1      | 4.3985 µs   | 4.4087 µs   | 4.4182 µs   |
+| day5_part2      | 12.783 µs   | 12.866 µs   | 12.955 µs   |
+| day6_part1      | 267.16 µs   | 267.54 µs   | 267.88 µs   |
+| day6_part2      | 6.8980 ms   | 6.9079 ms   | 6.9184 ms   |
+| day7_part1      | 172.78 µs   | 173.03 µs   | 173.27 µs   |
+| day7_part2      | 209.82 µs   | 210.27 µs   | 210.69 µs   |
 
 <!-- BENCHMARK RESULTS END -->
 
