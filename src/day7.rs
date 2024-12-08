@@ -31,14 +31,10 @@ where
         // Parse the sequence of numbers until newline
         count = 0;
         while bytes[0] != b'\n' {
-            match parse_number(bytes) {
-                Some((val, offset)) => {
-                    numbers[count] = val;
-                    count += 1;
-                    bytes = &bytes[offset + 1..];
-                }
-                None => break,
-            }
+            let (val, offset) = parse_number(bytes);
+            numbers[count] = val;
+            count += 1;
+            bytes = &bytes[offset + 1..];
         }
         bytes = &bytes[1..]; // \n
 
@@ -458,38 +454,30 @@ unsafe fn parse_target(bytes: &[u8]) -> (u64, usize) {
 }
 
 /// Parses a number of equation, returns the number and the count of digits.
-/// Assumes the first character is either a space or a newline.
+/// Assumes the first character is a space and the number starts at index 1.
 #[inline(always)]
-unsafe fn parse_number(bytes: &[u8]) -> Option<(u64, usize)> {
-    match *bytes.get_unchecked(0) {
-        b'\n' => None, // If the first character is a newline, return None
-        b' ' => {
-            // Assume the number starts at index 1
-            let c2 = *bytes.get_unchecked(2);
-            if c2 == b' ' || c2 == b'\n' {
-                // **1 Digit Case**
-                return Some(((*bytes.get_unchecked(1) as u64) - 48, 1));
-            }
-            let c3 = *bytes.get_unchecked(3);
-            if c3 == b' ' || c3 == b'\n' {
-                // **2 Digits Case**
-                return Some((
-                    (*bytes.get_unchecked(1) as u64) * 10 + (*bytes.get_unchecked(2) as u64)
-                        - 48 * 11,
-                    2,
-                ));
-            }
-            // **3 Digits Case**
-            Some((
-                (*bytes.get_unchecked(1) as u64) * 100
-                    + (*bytes.get_unchecked(2) as u64) * 10
-                    + (*bytes.get_unchecked(3) as u64)
-                    - 48 * 111,
-                3,
-            ))
-        }
-        _ => None, // If the first character is neither space nor newline, return None
+unsafe fn parse_number(bytes: &[u8]) -> (u64, usize) {
+    let c2 = *bytes.get_unchecked(2);
+    if c2 == b' ' || c2 == b'\n' {
+        // **1 Digit Case**
+        return (((*bytes.get_unchecked(1) as u64) - 48), 1);
     }
+    let c3 = *bytes.get_unchecked(3);
+    if c3 == b' ' || c3 == b'\n' {
+        // **2 Digits Case**
+        return (
+            (*bytes.get_unchecked(1) as u64) * 10 + (*bytes.get_unchecked(2) as u64) - 48 * 11,
+            2,
+        );
+    }
+    // **3 Digits Case**
+    (
+        (*bytes.get_unchecked(1) as u64) * 100
+            + (*bytes.get_unchecked(2) as u64) * 10
+            + (*bytes.get_unchecked(3) as u64)
+            - 48 * 111,
+        3,
+    )
 }
 
 #[cfg(test)]
@@ -561,40 +549,26 @@ mod tests {
     fn test_parse_number() {
         let test_cases = vec![
             // 1 Digit
-            (b" 0   ", Some((0, 1))),
-            (b" 1   ", Some((1, 1))),
-            (b" 9   ", Some((9, 1))),
-            (b" 5\n  ", Some((5, 1))),
+            (b" 0   ", (0, 1)),
+            (b" 1   ", (1, 1)),
+            (b" 9   ", (9, 1)),
+            (b" 5\n  ", (5, 1)),
             // 2 Digits
-            (b" 10  ", Some((10, 2))),
-            (b" 99  ", Some((99, 2))),
-            (b" 98\n ", Some((98, 2))),
-            (b" 57  ", Some((57, 2))),
+            (b" 10  ", (10, 2)),
+            (b" 99  ", (99, 2)),
+            (b" 98\n ", (98, 2)),
+            (b" 57  ", (57, 2)),
             // 3 Digits
-            (b" 100 ", Some((100, 3))),
-            (b" 999 ", Some((999, 3))),
-            (b" 987\n", Some((987, 3))),
-            (b" 123 ", Some((123, 3))),
+            (b" 100 ", (100, 3)),
+            (b" 999 ", (999, 3)),
+            (b" 987\n", (987, 3)),
+            (b" 123 ", (123, 3)),
         ];
 
         for (input, expected) in test_cases {
             unsafe {
                 let result = parse_number(input);
                 assert_eq!(result, expected, "Failed on input: {:?}", input);
-            }
-        }
-
-        let edge_cases = vec![
-            (b"\n1 2", None),
-            (b"\n 1 ", None),
-            (b"\n98 ", None),
-            (b"\n987", None),
-        ];
-
-        for (input, expected) in edge_cases {
-            unsafe {
-                let result = parse_number(input);
-                assert_eq!(result, expected, "Failed on edge input: {:?}", input);
             }
         }
     }
