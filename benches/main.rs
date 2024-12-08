@@ -29,7 +29,7 @@ macro_rules! generate_day_benchmarks {
     };
 }
 
-generate_day_benchmarks!(1, 2, 3, 4, 5, 6); // Add new days here
+generate_day_benchmarks!(7); // Add new days here
 
 criterion_group!(benches, register_benchmarks);
 criterion_main!(benches);

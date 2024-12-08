@@ -82,7 +82,6 @@ unsafe fn part2_impl(input: &str) -> u64 {
     })
 }
 
-#[inline(always)]
 #[allow(static_mut_refs)]
 unsafe fn can_form_target(numbers: &[u64], target: u64) -> bool {
     STACK_PTR = 0;
@@ -119,7 +118,6 @@ unsafe fn can_form_target(numbers: &[u64], target: u64) -> bool {
     false
 }
 
-#[inline]
 #[allow(static_mut_refs)]
 unsafe fn can_form_target_with_concat(numbers: &[u64], target: u64) -> bool {
     STACK_PTR = 0;
@@ -166,7 +164,7 @@ unsafe fn can_form_target_with_concat(numbers: &[u64], target: u64) -> bool {
 
 // A helper function to determine the smallest power of 10 greater than `val`,
 // given that val is guaranteed to be 1 to 3 digits.
-#[inline]
+#[inline(always)]
 fn power_of_10(val: u64) -> u64 {
     if val < 10 {
         10
