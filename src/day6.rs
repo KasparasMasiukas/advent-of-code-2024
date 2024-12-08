@@ -49,8 +49,8 @@ fn part1_impl(input: &str) -> (usize, Vec<(usize, usize)>, usize, usize) {
 
     // Initialize the Vec for visited positions, excluding starting position
     let mut visited_positions: Vec<(usize, usize)> = Vec::new();
-    let mut wall_i: usize = 0;
-    let mut wall_j: usize = 0;
+    let wall_i: usize;
+    let wall_j: usize;
 
     loop {
         // Get current direction deltas
@@ -450,7 +450,7 @@ pub fn part2(input: &str) -> usize {
         grid.grid[0][j] |= 1 << i;
         grid.grid[1][i] |= 1 << j;
         unsafe {
-            let (looping, length) = grid.is_looping();
+            let (looping, _) = grid.is_looping();
             if looping {
                 // println!("{}, {} - {}", i, j, length);
                 count += 1;
