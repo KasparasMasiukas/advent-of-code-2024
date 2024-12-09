@@ -8,6 +8,11 @@ pub fn part1(input: &str) -> usize {
     unsafe { part1_impl(input) }
 }
 
+#[aoc(day8, part2)]
+pub fn part2(input: &str) -> usize {
+    unsafe { part2_impl(input) }
+}
+
 /// 75 is enough to cover the range of ASCII 0-9A-Za-z if we subtract b'0' from each character.
 static mut ANTENNA_COUNTS: [u8; 75] = [0; 75]; // Count of antennas per frequency adjusted to 0-74
 /// Positions of up to 8 antennas per frequency (x, y).
@@ -15,80 +20,6 @@ static mut ANTENNA_COUNTS: [u8; 75] = [0; 75]; // Count of antennas per frequenc
 static mut ANTENNAS: [[(u8, u8); 8]; 75] = [[(0, 0); 8]; 75];
 /// Bitmask for antinodes at (y, x) - bit = 1 if antinode is present.
 static mut ANTINODES: [u64; 50] = [0; 50];
-
-#[allow(static_mut_refs)]
-unsafe fn part1_impl(input: &str) -> usize {
-    let mut line_ptr = input.as_bytes().as_ptr();
-
-    let antenna_counts_ptr = ANTENNA_COUNTS.as_mut_ptr();
-    write_bytes(antenna_counts_ptr, 0, 75);
-    let antinodes_ptr = ANTINODES.as_mut_ptr();
-    write_bytes(antinodes_ptr, 0, 50);
-    let antennas_ptr = ANTENNAS.as_mut_ptr();
-
-    for y in 0isize..50isize {
-        let mut mask = get_line_mask(line_ptr);
-
-        while mask != 0 {
-            let x = mask.trailing_zeros() as isize;
-            mask &= mask - 1;
-
-            let c = *line_ptr.add(x as usize);
-            let c_index = (c - b'0') as usize;
-            let count_ptr = antenna_counts_ptr.add(c_index);
-            let count = *count_ptr as usize;
-            let freq_arr_ptr = antennas_ptr.add(c_index); // *mut [(u8, u8); 4]
-
-            // Process against previously found antennas of same type
-            for k in 0..count {
-                let old_pos = (*freq_arr_ptr).get_unchecked(k); // (x, y)
-                let old_x = old_pos.0 as isize;
-                let old_y = old_pos.1 as isize;
-
-                let dx = x - old_x;
-                let dy = y - old_y;
-
-                // From old to current: B + (B - A) = 2B - A
-                {
-                    let a_x = x + dx;
-                    let a_y = y + dy;
-                    if a_x >= 0 && a_x < 50 && a_y >= 0 && a_y < 50 {
-                        *antinodes_ptr.add(a_y as usize) |= 1 << a_x;
-                    }
-                }
-
-                // From current to old: A + (A - B) = 2A - B
-                {
-                    let a_x = old_x - dx;
-                    let a_y = old_y - dy;
-                    if a_x >= 0 && a_x < 50 && a_y >= 0 && a_y < 50 {
-                        *antinodes_ptr.add(a_y as usize) |= 1 << a_x;
-                    }
-                }
-            }
-
-            // Store new antenna (x,y)
-            *(*freq_arr_ptr).get_unchecked_mut(count) = (x as u8, y as u8);
-            *count_ptr = (count + 1) as u8;
-        }
-
-        line_ptr = line_ptr.add(51); // Advance to next line for next iteration
-    }
-
-    // Count the bits
-    let mut result = 0usize;
-    for i in 0..50 {
-        let row_bits = *antinodes_ptr.add(i);
-        result += row_bits.count_ones() as usize;
-    }
-
-    result
-}
-
-#[aoc(day8, part2)]
-pub fn part2(input: &str) -> usize {
-    unsafe { part2_impl(input) }
-}
 
 const LINE_LEN: usize = 50;
 const VALID_MASK: u64 = (1u64 << LINE_LEN) - 1;
@@ -102,8 +33,23 @@ unsafe fn get_line_mask(line_ptr: *const u8) -> u64 {
         & VALID_MASK
 }
 
+/// Generalised function to work on part 1 and part 2 as they share most of the logic.
+/// The only difference is how each matching pair of antennas are processed,
+/// hence the process_antena closure.
+/// # Parameters
+/// - `input`: The input string containing the antenna data.
+/// - `process_antenna`: A closure that processes each antenna. It takes the following parameters:
+///   - `x`: The x-coordinate of the current antenna.
+///   - `y`: The y-coordinate of the current antenna.
+///   - `old_x`: The x-coordinate of the previous antenna of the same type.
+///   - `old_y`: The y-coordinate of the previous antenna of the same type.
+///   - `antinodes_ptr`: A pointer to the antinodes bitmask array.
 #[allow(static_mut_refs)]
-unsafe fn part2_impl(input: &str) -> usize {
+#[inline(always)]
+unsafe fn process_impl<F>(input: &str, mut process_antenna: F) -> usize
+where
+    F: FnMut(isize, isize, isize, isize, *mut u64),
+{
     let mut line_ptr = input.as_bytes().as_ptr();
 
     let antenna_counts_ptr = ANTENNA_COUNTS.as_mut_ptr();
@@ -123,34 +69,16 @@ unsafe fn part2_impl(input: &str) -> usize {
             let c_index = (c - b'0') as usize;
             let count_ptr = antenna_counts_ptr.add(c_index);
             let count = *count_ptr as usize;
-            let freq_arr_ptr = antennas_ptr.add(c_index); // *mut [(u8, u8); 4]
+            let freq_arr_ptr = antennas_ptr.add(c_index); // *mut [(u8, u8); 8]
 
-            // Process pairs (old antennas)
+            // Process against previously found antennas of the same type
             for k in 0..count {
                 let old_pos = (*freq_arr_ptr).get_unchecked(k); // (x, y)
                 let old_x = old_pos.0 as isize;
                 let old_y = old_pos.1 as isize;
 
-                let dx = x - old_x;
-                let dy = y - old_y;
-
-                // Backward
-                let mut s_x = old_x + dx;
-                let mut s_y = old_y + dy;
-                while s_x >= 0 && s_x < 50 && s_y >= 0 && s_y < 50 {
-                    *antinodes_ptr.add(s_y as usize) |= 1 << s_x;
-                    s_x += dx;
-                    s_y += dy;
-                }
-
-                // Forward
-                let mut s_x = x - dx;
-                let mut s_y = y - dy;
-                while s_x >= 0 && s_x < 50 && s_y >= 0 && s_y < 50 {
-                    *antinodes_ptr.add(s_y as usize) |= 1 << s_x;
-                    s_x -= dx;
-                    s_y -= dy;
-                }
+                // Processing antenna depends on whether it's part 1 or part 2
+                process_antenna(x, y, old_x, old_y, antinodes_ptr);
             }
 
             // Store new antenna (x, y)
@@ -161,7 +89,7 @@ unsafe fn part2_impl(input: &str) -> usize {
         line_ptr = line_ptr.add(51); // Advance to next line for next iteration
     }
 
-    // Count the bits
+    // Count the bits in ANTINODES
     let mut result = 0usize;
     for i in 0..50 {
         let row_bits = *antinodes_ptr.add(i);
@@ -169,6 +97,56 @@ unsafe fn part2_impl(input: &str) -> usize {
     }
 
     result
+}
+
+#[allow(static_mut_refs)]
+unsafe fn part1_impl(input: &str) -> usize {
+    // Part 1: Simply checks 2 spots for each antenna pair
+    process_impl(input, |x, y, old_x, old_y, antinodes_ptr| {
+        let dx = x - old_x;
+        let dy = y - old_y;
+
+        // From old to current: B + (B - A) = 2B - A
+        let a_x = x + dx;
+        let a_y = y + dy;
+        if a_x >= 0 && a_x < 50 && a_y >= 0 && a_y < 50 {
+            *antinodes_ptr.add(a_y as usize) |= 1 << a_x;
+        }
+
+        // From current to old: A + (A - B) = 2A - B
+        let a_x = old_x - dx;
+        let a_y = old_y - dy;
+        if a_x >= 0 && a_x < 50 && a_y >= 0 && a_y < 50 {
+            *antinodes_ptr.add(a_y as usize) |= 1 << a_x;
+        }
+    })
+}
+
+#[allow(static_mut_refs)]
+unsafe fn part2_impl(input: &str) -> usize {
+    // Part 2: Checks the whole line of each antenna pair
+    process_impl(input, |x, y, old_x, old_y, antinodes_ptr| {
+        let dx = x - old_x;
+        let dy = y - old_y;
+
+        // Backward: Extend in the (dx, dy) direction
+        let mut s_x = old_x + dx;
+        let mut s_y = old_y + dy;
+        while s_x >= 0 && s_x < 50 && s_y >= 0 && s_y < 50 {
+            *antinodes_ptr.add(s_y as usize) |= 1 << s_x;
+            s_x += dx;
+            s_y += dy;
+        }
+
+        // Forward: Extend in the (-dx, -dy) direction
+        let mut s_x = x - dx;
+        let mut s_y = y - dy;
+        while s_x >= 0 && s_x < 50 && s_y >= 0 && s_y < 50 {
+            *antinodes_ptr.add(s_y as usize) |= 1 << s_x;
+            s_x -= dx;
+            s_y -= dy;
+        }
+    })
 }
 
 #[cfg(test)]
