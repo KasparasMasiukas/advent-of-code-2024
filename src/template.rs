@@ -24,7 +24,7 @@ mod tests {
     use std::fs;
     use std::path::Path;
 
-    const DAY: u8 = 0; // FIXME: change day here
+    const DAY: u8 = 25; // FIXME: change day here
     const INPUT: &str = ""; // FIXME: add example input here
 
     #[test]
