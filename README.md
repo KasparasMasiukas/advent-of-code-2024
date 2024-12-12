@@ -32,6 +32,8 @@ Competing in the [Advent of CodSpeed](https://codspeed.io/advent/) challenge.
 | day9_part2  | 138.35 µs | 139.46 µs | 140.76 µs |
 | day10_part1 | 7.9557 µs | 7.9753 µs | 7.9951 µs |
 | day10_part2 | 4.3962 µs | 4.4078 µs | 4.4182 µs |
+| day11_part1 | 35.865 ns | 35.905 ns | 35.946 ns |
+| day11_part2 | 35.379 ns | 35.416 ns | 35.452 ns |
 
 <!-- BENCHMARK RESULTS END -->
 
