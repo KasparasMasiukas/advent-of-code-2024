@@ -86,7 +86,7 @@ const fn split_number(n: u64) -> (u64, u64) {
     (left, right)
 }
 
-const BIN_LUT_SIZE: usize = 10_000_000;
+const BIN_LUT_SIZE: usize = 100_000; // Increase to 10_000_000 for slower build but faster runtime
 const MINI_LUT_SIZE: usize = 1000;
 const MINI_LUT_BOUND: u64 = MINI_LUT_SIZE as u64;
 const MAX_BLINKS: usize = 75;
