@@ -75,7 +75,7 @@ fn fetch_and_save_input(day: u32) -> Result<(), String> {
 }
 
 const MAX_BLINKS: usize = 75;
-const BIN_LUT_SIZE: usize = 10_000_000; // 7 digits
+const BIN_LUT_SIZE: usize = 100_000; // Increase to 10_000_000 for slower build but faster runtime
 
 #[inline(always)]
 const fn num_digits(n: u64) -> usize {
@@ -208,7 +208,6 @@ fn build_day11_lut() {
 
     if lut1_path.exists() && lut2_path.exists() {
         println!("cargo:warning=LUT binaries already exist at {:?}", out_dir);
-        return;
     }
 
     println!(
