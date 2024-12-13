@@ -1,5 +1,5 @@
 #[aoc(day12, part1)]
-pub fn part1(input: &str) -> u64 {
+pub fn part1(input: &str) -> u32 {
     unsafe { part1_impl(input.as_bytes()) }
 }
 
@@ -18,7 +18,7 @@ fn compute_height(total_len: usize) -> usize {
 }
 
 #[allow(static_mut_refs)]
-unsafe fn part1_impl(grid: &[u8]) -> u64 {
+unsafe fn part1_impl(grid: &[u8]) -> u32 {
     TRUE = TRUE.wrapping_add(1);
 
     let total_len = grid.len();
@@ -30,7 +30,7 @@ unsafe fn part1_impl(grid: &[u8]) -> u64 {
     let stack_ptr = STACK.as_mut_ptr();
 
     let mut stack_top = stack_ptr;
-    let mut total_price: u64 = 0;
+    let mut total_price: u32 = 0;
 
     let mut i: usize = 0;
     while i < total_len {
@@ -42,8 +42,8 @@ unsafe fn part1_impl(grid: &[u8]) -> u64 {
             *stack_top = i;
             stack_top = stack_top.add(1);
 
-            let mut area: u64 = 0;
-            let mut perimeter: u64 = 0;
+            let mut area: u32 = 0;
+            let mut perimeter: u32 = 0;
             let region_char = current_char;
 
             while stack_top != stack_ptr {
@@ -110,12 +110,12 @@ unsafe fn part1_impl(grid: &[u8]) -> u64 {
 }
 
 #[aoc(day12, part2)]
-pub fn part2(input: &str) -> u64 {
+pub fn part2(input: &str) -> u32 {
     unsafe { part2_impl(input.as_bytes()) }
 }
 
 #[allow(static_mut_refs)]
-unsafe fn part2_impl(grid: &[u8]) -> u64 {
+unsafe fn part2_impl(grid: &[u8]) -> u32 {
     TRUE = TRUE.wrapping_add(1);
 
     let total_len = grid.len();
@@ -127,7 +127,7 @@ unsafe fn part2_impl(grid: &[u8]) -> u64 {
     let stack_ptr = STACK.as_mut_ptr();
     let mut stack_top = stack_ptr;
 
-    let mut total_price: u64 = 0;
+    let mut total_price: u32 = 0;
 
     let directions: [isize; 4] = [-1, 1, -(line_len as isize), line_len as isize];
 
@@ -141,8 +141,8 @@ unsafe fn part2_impl(grid: &[u8]) -> u64 {
             stack_top = stack_top.add(1);
 
             let region_char = current_char;
-            let mut area: u64 = 0;
-            let mut sides: u64 = 0;
+            let mut area: u32 = 0;
+            let mut sides: u32 = 0;
 
             while stack_top != stack_ptr {
                 stack_top = stack_top.sub(1);
@@ -256,7 +256,7 @@ MMMISSJEEE
             format!("day{DAY}-alt1.txt"),
             format!("day{DAY}-alt2.txt"),
         ];
-        let outputs: [u64; 3] = [1370258, 1489582, 1370258];
+        let outputs: [u32; 3] = [1370258, 1489582, 1370258];
         for (i, path) in paths.iter().enumerate() {
             let module_dir = Path::new(file!()).parent().unwrap();
             let file_path = module_dir.join(format!("../input/2024/{}", path));
@@ -274,7 +274,7 @@ MMMISSJEEE
             format!("day{DAY}-alt1.txt"),
             format!("day{DAY}-alt2.txt"),
         ];
-        let outputs: [u64; 3] = [805814, 914966, 805814];
+        let outputs: [u32; 3] = [805814, 914966, 805814];
         for (i, path) in paths.iter().enumerate() {
             let module_dir = Path::new(file!()).parent().unwrap();
             let file_path = module_dir.join(format!("../input/2024/{}", path));

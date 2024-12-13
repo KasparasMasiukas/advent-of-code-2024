@@ -208,7 +208,6 @@ fn build_day11_lut() {
 
     if lut1_path.exists() && lut2_path.exists() {
         println!("cargo:warning=LUT binaries already exist at {:?}", out_dir);
-        return;
     }
 
     println!(
