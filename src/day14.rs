@@ -83,6 +83,7 @@ macro_rules! compute_next_var {
     ($func_name:ident, $data:ident, $dim:expr) => {
         #[inline(always)]
         #[allow(static_mut_refs)]
+        #[allow(dead_code)]
         unsafe fn $func_name(input_variance: f32) -> (i32, f32) {
             let mut min_variance_t: i32 = i32::MAX;
             let mut min_variance: f32 = f32::MAX;
@@ -145,6 +146,7 @@ unsafe fn part2_impl(input: &[u8]) -> i32 {
 }
 
 #[allow(static_mut_refs)]
+#[allow(dead_code)]
 unsafe fn part2_analysis(input: &[u8], offset: usize) -> i32 {
     let mut ptr = input.as_ptr().add(2);
     for _ in 0..offset {
