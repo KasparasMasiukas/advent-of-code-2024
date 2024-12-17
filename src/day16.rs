@@ -126,14 +126,6 @@ unsafe fn expand_turn(cost: u32, pos: usize, dir: usize, input: &[u8]) {
 
 #[allow(static_mut_refs)]
 unsafe fn part2_impl(input: &[u8]) -> usize {
-    // Phase 1 - copy from Part 1, except we don't break early when the end pos is found
-    TRUE = TRUE.wrapping_add(1);
-    if TRUE == 0 || TRUE == u32::MAX {
-        std::ptr::write_bytes(VISITED_DIST.as_mut_ptr(), 0, STATE_COUNT);
-        std::ptr::write_bytes(VALID_SPOT.as_mut_ptr(), 0, GRID_SIZE * LINE_LEN);
-        TRUE = 1;
-    }
-
     // Phase 1 - find the minimum cost to reach the end pos
     let min_cost_found = part1_impl(input);
 
@@ -293,7 +285,7 @@ mod tests {
     use std::fs;
     use std::path::Path;
 
-    const DAY: u8 = 16; // FIXME: change day here
+    const DAY: u8 = 16;
     const INPUT: &str = "###############
 #.......#....E#
 #.#.###.#.###.#
