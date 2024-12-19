@@ -56,10 +56,12 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
         TRUE = 1;
     }
     let mut ptr = input.as_ptr();
-    for _ in 0..P1_BLOCKS {
+    let mut i = 0;
+    while i < P1_BLOCKS {
         let (x, y) = parse_line(&mut ptr);
         let coords = encode_coords(x, y + 1);
         *VISITED.get_unchecked_mut(coords) = TRUE;
+        i += 1;
     }
 
     VISITED[START_COORDS] = TRUE;
@@ -80,32 +82,36 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
 
             // Left
             let next_coords = left(coords);
-            if VISITED[next_coords] < TRUE {
-                VISITED[next_coords] = TRUE;
+            let visited = VISITED.get_unchecked_mut(next_coords);
+            if *visited < TRUE {
+                *visited = TRUE;
                 *(*next).0.get_unchecked_mut((*next).1) = next_coords;
                 (*next).1 += 1;
             }
 
             // Right
             let next_coords = right(coords);
-            if VISITED[next_coords] < TRUE {
-                VISITED[next_coords] = TRUE;
+            let visited = VISITED.get_unchecked_mut(next_coords);
+            if *visited < TRUE {
+                *visited = TRUE;
                 *(*next).0.get_unchecked_mut((*next).1) = next_coords;
                 (*next).1 += 1;
             }
 
             // Up
             let next_coords = up(coords);
-            if VISITED[next_coords] < TRUE {
-                VISITED[next_coords] = TRUE;
+            let visited = VISITED.get_unchecked_mut(next_coords);
+            if *visited < TRUE {
+                *visited = TRUE;
                 *(*next).0.get_unchecked_mut((*next).1) = next_coords;
                 (*next).1 += 1;
             }
 
             // Down
             let next_coords = down(coords);
-            if VISITED[next_coords] < TRUE {
-                VISITED[next_coords] = TRUE;
+            let visited = VISITED.get_unchecked_mut(next_coords);
+            if *visited < TRUE {
+                *visited = TRUE;
                 *(*next).0.get_unchecked_mut((*next).1) = next_coords;
                 (*next).1 += 1;
             }
