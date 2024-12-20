@@ -136,6 +136,7 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
     possible_count
 }
 
+#[allow(static_mut_refs)]
 unsafe fn part2_impl(input: &[u8]) -> usize {
     let mut ptr = input.as_ptr();
     parse_trie(&mut ptr);
