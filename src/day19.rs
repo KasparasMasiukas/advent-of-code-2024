@@ -23,8 +23,6 @@ const NODE_ID: [usize; 120] = {
 
 const TOTAL_PATTERNS: usize = 447;
 const COUNTS_SIZE: usize = 61;
-static mut REACHABLE: [u32; COUNTS_SIZE] = [0; COUNTS_SIZE];
-static mut TRUE: u32 = 0;
 const TRIE_SIZE: usize = 5000;
 const NODE_SIZE: usize = 6;
 // Every node takes 6 slots: i=0: 1 if terminal, 0 otherwise; i=(1..=5) - next nodes for wubrg.
@@ -33,7 +31,6 @@ const IS_TERMINAL: usize = 1;
 
 const MAX_STACK_SIZE: usize = 128;
 static mut STACK: [usize; MAX_STACK_SIZE] = [0; MAX_STACK_SIZE];
-static mut STACK_SIZE: usize = 0;
 
 #[inline(always)]
 #[allow(static_mut_refs)]
@@ -75,14 +72,10 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
     let mut ptr = input.as_ptr();
     parse_trie(&mut ptr);
 
-    if TRUE > u32::MAX - 500 {
-        TRUE = 0;
-        ptr::write_bytes(REACHABLE.as_mut_ptr(), 0, COUNTS_SIZE);
-    }
-
     let designs_start = ptr.offset_from(input.as_ptr()) as usize;
     let designs = &input[designs_start..];
     let mut possible_count = 0;
+    let mut stack_size = 0;
 
     let mut start_pos = 0;
     for end_pos in memchr_iter(b'\n', designs) {
@@ -91,16 +84,14 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
         start_pos = end_pos + 1; // for next iteration
 
         STACK[0] = 0; // Start from root
-        STACK_SIZE = 1;
+        stack_size = 1;
 
-        TRUE += 1;
-        REACHABLE[0] = TRUE;
-
+        let mut visited = 0u64; // Bitmask for visited nodes
         let mut possible = 0;
 
-        while STACK_SIZE > 0 {
-            STACK_SIZE -= 1;
-            let current_pos = *STACK.get_unchecked_mut(STACK_SIZE);
+        while stack_size > 0 {
+            stack_size -= 1;
+            let current_pos = *STACK.get_unchecked_mut(stack_size);
 
             if current_pos == len {
                 possible = 1;
@@ -119,13 +110,11 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
                 }
 
                 next += 1; // Expand
-                if *TRIE.get_unchecked(offset) > 0 {
-                    let reachable = REACHABLE.get_unchecked_mut(next);
-                    if *reachable != TRUE {
-                        *reachable = TRUE;
-                        *STACK.get_unchecked_mut(STACK_SIZE) = next;
-                        STACK_SIZE += 1;
-                    }
+                let next_mask = 1 << next;
+                if *TRIE.get_unchecked(offset) > 0 && (visited & next_mask) == 0 {
+                    visited |= next_mask;
+                    *STACK.get_unchecked_mut(stack_size) = next;
+                    stack_size += 1;
                 }
             }
         }
