@@ -75,7 +75,7 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
     let designs_start = ptr.offset_from(input.as_ptr()) as usize;
     let designs = &input[designs_start..];
     let mut possible_count = 0;
-    let mut stack_size = 0;
+    let mut stack_size;
 
     let mut start_pos = 0;
     for end_pos in memchr_iter(b'\n', designs) {
