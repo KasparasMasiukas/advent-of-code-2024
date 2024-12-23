@@ -2,7 +2,7 @@ use std::ptr;
 use std::simd::num::SimdUint;
 use std::simd::{simd_swizzle, Simd};
 
-include!("day21_luts.rs");
+include!("luts/day21_luts.rs");
 
 #[aoc(day21, part1)]
 pub fn part1(input: &str) -> u32 {
