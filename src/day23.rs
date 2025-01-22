@@ -54,7 +54,7 @@ unsafe fn part1_impl(input: &[u8]) -> usize {
     let mut count = 0;
     for i in 0..676 {
         if test_used(used.as_ptr(), i) {
-            nodes[count] = i as u16;
+            nodes[count] = i;
             count += 1;
         }
     }
@@ -127,7 +127,7 @@ unsafe fn part2_impl(input: &[u8]) -> &'static str {
     let mut used_count = 0;
     for i in 0..676 {
         if test_used(used.as_ptr(), i) {
-            used_nodes[used_count] = i as u16;
+            used_nodes[used_count] = i;
             used_count += 1;
         }
     }
@@ -143,21 +143,21 @@ unsafe fn part2_impl(input: &[u8]) -> &'static str {
         }
     }
 
-    let mut P = [0u8; 85];
+    let mut p = [0u8; 85];
     for ui in 0..used_count {
         let i = used_nodes[ui];
-        set_bit(&mut P, i);
+        set_bit(&mut p, i);
     }
-    let mut X = [0u8; 85];
-    let mut R = Vec::with_capacity(676);
+    let mut x = [0u8; 85];
+    let mut r = Vec::with_capacity(676);
 
     let mut best_clique = Vec::new();
     best_clique.reserve(676);
 
     bron_kerbosch_pivot(
-        &mut R,
-        &mut P,
-        &mut X,
+        &mut r,
+        &mut p,
+        &mut x,
         ADJ_SETS_BUF.as_ptr(),
         &mut best_clique,
     );
@@ -180,52 +180,52 @@ unsafe fn part2_impl(input: &[u8]) -> &'static str {
 }
 
 unsafe fn bron_kerbosch_pivot(
-    R: &mut Vec<u16>,
-    P: &mut BitSet,
-    X: &mut BitSet,
+    r: &mut Vec<u16>,
+    p: &mut BitSet,
+    x: &mut BitSet,
     adjacency_sets: *const u8,
     best_clique: &mut Vec<u16>,
 ) {
-    if bitset_is_empty(P) && bitset_is_empty(X) {
-        if R.len() > best_clique.len() {
+    if bitset_is_empty(p) && bitset_is_empty(x) {
+        if r.len() > best_clique.len() {
             best_clique.clear();
-            best_clique.extend_from_slice(R);
+            best_clique.extend_from_slice(r);
         }
         return;
     }
 
-    // Choose a pivot u from P ∪ X (just pick the first bit we find).
-    let mut PX = *P;
-    bitset_or(&mut PX, X);
-    let u = bitset_first_set(&PX);
+    // Choose a pivot u from p ∪ x (just pick the first bit we find).
+    let mut px = *p;
+    bitset_or(&mut px, x);
+    let u = bitset_first_set(&px);
     if u == 0xFFFF {
         return;
     }
 
-    let mut temp = *P;
+    let mut temp = *p;
     let u_neighbors = adjacency_set(adjacency_sets as *mut u8, u);
     bitset_not_in_place(&mut temp, u_neighbors);
 
-    // For each v in temp ( = P \ N(u) )
+    // For each v in temp ( = p \ N(u) )
     let mut v = bitset_first_set(&temp);
     while v != 0xFFFF {
-        // R ∪ {v}
-        R.push(v);
+        // r ∪ {v}
+        r.push(v);
 
-        // newP = P ∩ N(v)
-        let mut newP = *P;
+        // new_p = p ∩ N(v)
+        let mut new_p = *p;
         let v_neighbors = adjacency_set(adjacency_sets as *mut u8, v);
-        bitset_and(&mut newP, v_neighbors);
+        bitset_and(&mut new_p, v_neighbors);
 
-        // newX = X ∩ N(v)
-        let mut newX = *X;
-        bitset_and(&mut newX, v_neighbors);
+        // new_x = x ∩ N(v)
+        let mut new_x = *x;
+        bitset_and(&mut new_x, v_neighbors);
 
-        bron_kerbosch_pivot(R, &mut newP, &mut newX, adjacency_sets, best_clique);
+        bron_kerbosch_pivot(r, &mut new_p, &mut new_x, adjacency_sets, best_clique);
 
-        R.pop();
-        bitset_clear_bit(P, v);
-        bitset_set_bit(X, v);
+        r.pop();
+        bitset_clear_bit(p, v);
+        bitset_set_bit(x, v);
 
         v = bitset_next_set(&temp, v + 1);
     }

@@ -2,7 +2,7 @@
 
 This repo contains Rust solutions for Advent of Code 2024, optimised for speed.
 
-Competing in the [Advent of CodSpeed](https://codspeed.io/advent/) challenge.
+🥉 **3rd Place Winner** of the [Advent of CodSpeed challenge](https://codspeed.io/advent/leaderboard/global).
 
 [![CodSpeed Badge](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/KasparasMasiukas/advent-of-code-2024)
 
@@ -56,6 +56,12 @@ Competing in the [Advent of CodSpeed](https://codspeed.io/advent/) challenge.
 | day21_part2 | 14.376 ns | 14.410 ns | 14.446 ns |
 | day22_part1 | 2.6258 µs | 2.6322 µs | 2.6391 µs |
 | day22_part2 | 8.4366 ms | 8.4518 ms | 8.4680 ms |
+| day23_part1 | 877.36 µs | 878.33 µs | 879.29 µs |
+| day23_part2 | 502.62 µs | 503.55 µs | 504.61 µs |
+| day24_part1 | 115.38 µs | 115.54 µs | 115.71 µs |
+| day24_part2 | 39.166 µs | 39.220 µs | 39.278 µs |
+| day25_part1 | 11.082 µs | 11.109 µs | 11.139 µs |
+| day25_part2 | 8.6361 ns | 8.6473 ns | 8.6592 ns |
 
 <!-- BENCHMARK RESULTS END -->
 
